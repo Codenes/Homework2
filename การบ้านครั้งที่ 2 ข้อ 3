@@ -1,0 +1,115 @@
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        bool continueProcessing = true;
+        while (continueProcessing)
+        {
+            Console.Write("Enter an operator (+/-) or 'Exit' to quit: ");
+            string input = Console.ReadLine();
+
+            if (input == "+" || input == "-")
+            {
+                int size = 0;
+                double value = 0.0;
+
+                while (true)
+                {
+                    Console.Write("Enter the size of the matrix: ");
+                    bool validSize = int.TryParse(Console.ReadLine(), out size);
+
+                    if (validSize && size > 0)
+                        break;
+                    else
+                        Console.WriteLine("Invalid size. Please enter a positive integer.");
+                }
+
+                Console.WriteLine("Enter the matrix elements:");
+                int[,] matrix = new int[size, size];
+
+                for (int i = 0; i < size; i++)
+                {
+                    string[] values = Console.ReadLine().Split('\t', StringSplitOptions.RemoveEmptyEntries);
+
+                    if (values.Length != size)
+                    {
+                        Console.WriteLine("Invalid number of matrix elements. Please enter exactly " + size + " elements.");
+                        continue;
+                    }
+
+                    for (int j = 0; j < size; j++)
+                    {
+                        bool validValue = double.TryParse(values[j], out value);
+
+                        if (validValue)
+                            matrix[i, j] = Convert.ToInt32(value);
+                        else
+                        {
+                            Console.WriteLine("Invalid matrix element. Please enter a valid number.");
+                            j--; // Decrement j to reattempt the input for the invalid element
+                        }
+                    }
+                }
+
+                Console.WriteLine("Result:");
+                DisplayMatrix(matrix);
+
+                int result = PerformOperation(matrix, input);
+                Console.WriteLine("Result of the operation: " + result);
+            }
+            else if (input == "Exit")
+            {
+                continueProcessing = false;
+            }
+            else
+            {
+                continueProcessing = false;
+                Console.WriteLine("Invalid input. Program terminated.");
+            }
+        }
+    }
+
+    static void DisplayMatrix(int[,] matrix)
+    {
+        int size = matrix.GetLength(0);
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                Console.Write(matrix[i, j] + "\t");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    static int PerformOperation(int[,] matrix, string operation)
+    {
+        int size = matrix.GetLength(0);
+        int result = 0;
+
+        if (operation == "+")
+        {
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    result += matrix[i, j];
+                }
+            }
+        }
+        else if (operation == "-")
+        {
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    result -= matrix[i, j];
+                }
+            }
+        }
+
+        return result;
+    }
+}
