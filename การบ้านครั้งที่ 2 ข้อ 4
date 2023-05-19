@@ -1,0 +1,36 @@
+using System;
+
+class MainClass {
+  public static void Main (string[] args) {
+    string[] input = Console.ReadLine().Split(' ');
+    int N = int.Parse(input[0]);
+    int K = int.Parse(input[1]);
+
+    string[] population = Console.ReadLine().Split(' ');
+
+    int maxCustomers = 0;
+    int sum = 0;
+    int left = 0;
+    int right = 0;
+
+    
+    while (right < N) {
+      sum += int.Parse(population[right]);
+
+     
+      if (right - left > K) {
+        sum -= int.Parse(population[left]);
+        left++;
+      }
+
+      
+      if (right - left == K && sum > maxCustomers) {
+        maxCustomers = sum;
+      }
+
+      right++;
+    }
+
+    Console.WriteLine(maxCustomers);
+  }
+}
